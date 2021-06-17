@@ -9,14 +9,13 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
-	"github.com/reusee/e/v2"
+	"github.com/reusee/e4"
 	"github.com/reusee/toml"
 	"golang.org/x/oauth2"
 )
 
 var (
-	me     = e.Default.WithStack()
-	ce, he = e.New(me)
+	ce, he = e4.Check, e4.Handle
 	pt     = fmt.Printf
 )
 
@@ -60,16 +59,16 @@ func main() {
 			if time.Since(repo.UpdatedAt.Time) < time.Hour*24*365*1 {
 				continue
 			}
-			if *repo.Archived {
-				continue
-			}
+			//if *repo.Archived {
+			//	continue
+			//}
 			pt(
 				"%s\n\t%v\n\t%v\n",
 				*repo.Name,
 				*repo.UpdatedAt,
 				*repo.HTMLURL,
 			)
-			t := true
+			t := false
 			repo.Archived = &t
 			_, _, err := client.Repositories.Edit(ctx, *repo.Owner.Login, *repo.Name, repo)
 			ce(err)
